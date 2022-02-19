@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View, useWindowDimensions, ScrollView} from 'react-native';
 import React, { useState } from 'react'
 import {TabBar, TabView, SceneMap} from 'react-native-tab-view';
-import { ItemListMenu } from '..';
+import ItemListMenu from '../ItemListMenu';
 
 const Account = () => {
 
