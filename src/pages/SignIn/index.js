@@ -7,6 +7,7 @@ import {
     TextInputComponent
 } from '../../components'
 import { useForm } from '../../utils'
+import Axios from 'axios'
 
 const SignIn = ({navigation}) => {
   // const [email, setEmail] = useState('');
@@ -20,6 +21,13 @@ const SignIn = ({navigation}) => {
     console.log("Form", form);
     // console.log("Email ", email);
     // console.log("Password ", password);
+    Axios.post('http://foodmarket-backend.buildwithangga.id/api/login', form)
+      .then((res) => {
+        console.log("Success", res);
+      })
+      .catch((err) => {
+        console.log("Error", err);
+      });
   }
   
   return (
