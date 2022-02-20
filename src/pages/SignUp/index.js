@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Button, Gap, Header, TextInputComponent } from '../../components'
+import { useSelector } from 'react-redux'
 
 const SignUp = ({navigation}) => {
+    const globalState = useSelector((state) => state.globalReducer);
   return (
     <View style={styles.page}>
       <Header onBack={()=> {}} title="Sign Up" subTitle="Register and eat" />
