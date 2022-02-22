@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Button, Gap, Header, Select, TextInputComponent } from '../../components'
 import { useForm } from '../../utils'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {showMessage, hideMessage} from 'react-native-flash-message';
 import Axios from 'axios'
 
@@ -14,6 +14,7 @@ const SignUpAddress = ({navigation}) => {
     city: 'Bandung'
   });
 
+  const dispatch = useDispatch();
   const registerReducer = useSelector((state)=> state.registerReducer);
 
   const onSubmit = ()=> {
@@ -23,14 +24,17 @@ const SignUpAddress = ({navigation}) => {
       ...registerReducer
     }
     console.log("Data Register: ", data);
+    dispatch({type: 'SET_LOADING', value: true});
     Axios.post('http://foodmarket-backend.buildwithangga.id/api/register', data)
     .then((res)=> {
       console.log("Data Success: ", res.data);
+      dispatch({type: 'SET_LOADING', value: false});
       showToast('Register Success', 'success');
       navigation.replace('SuccessSignUp');
     })
     .catch((err)=> {
       console.log("Signup Error: ", err.response.data.message);
+      dispatch({type: 'SET_LOADING', value: false});
       showToast(err?.response?.data?.message);
     })
   };
