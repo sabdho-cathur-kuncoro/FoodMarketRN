@@ -1,8 +1,16 @@
-import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
+import React, { useState } from 'react'
 import { Button, Gap, Header, TextInputComponent } from '../../components'
 import { useDispatch, useSelector } from 'react-redux'
-import { useForm } from '../../utils'
+import { showMessage, useForm } from '../../utils'
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const SignUp = ({navigation}) => {
     const [form, setForm] = useForm({
@@ -10,6 +18,7 @@ const SignUp = ({navigation}) => {
         email: '',
         password: '',
     });
+    const [photo, setPhoto] = useState('');
 
     const dispatch = useDispatch();
 
@@ -18,41 +27,72 @@ const SignUp = ({navigation}) => {
         dispatch({type: 'SET_REGISTER', value: form});
         navigation.navigate('SignUpAddress');
     }
+
+    const addPhoto = ()=> {
+      launchImageLibrary({
+        quality: 0.5,
+        maxWidth: 200,
+        maxHeight: 200
+      }, (response)=> {
+        console.log('Response ', response);
+
+        if(response.didCancel || response.error) {
+          showMessage("Anda tidak memilih photo");
+        } else {
+          const source = {uri: response.assets[0].uri};
+          console.log("Source: ",source);
+          const dataImage = {
+            uri: response.uri,
+            type: response.type,
+            name: response.fileName
+          }
+          setPhoto(source);
+        }
+      });
+    };
   return (
     <View style={styles.page}>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{flexGrow: 1}}>
         <Header onBack={() => {}} title="Sign Up" subTitle="Register and eat" />
         <View style={styles.container}>
-          <View style={styles.photo}>
-            <View style={styles.borderPhoto}>
-              <View style={styles.photoContainer}>
-                <Text style={styles.addPhoto}>Add Photo</Text>
+          <TouchableOpacity activeOpacity={0.7} onPress={addPhoto}>
+            <View style={styles.photo}>
+              <View style={styles.borderPhoto}>
+                {photo ? (
+                  <Image source={photo} style={styles.photoContainer} />
+                ) : (
+                  <View style={styles.photoContainer}>
+                    <Text style={styles.addPhoto}>Add Photo</Text>
+                  </View>
+                )}
               </View>
             </View>
-          </View>
-            <TextInputComponent
-              label="Full Name"
-              placeholder="Type your fullname"
-              value={form.name}
-              onChangeText={value => setForm('name', value)}
-            />
-            <Gap height={16} />
-            <TextInputComponent
-              label="Email Address"
-              placeholder="Type your email address"
-              value={form.email}
-              onChangeText={value => setForm('email', value)}
-            />
-            <Gap height={16} />
-            <TextInputComponent
-              label="Password"
-              placeholder="Type your password"
-              value={form.password}
-              onChangeText={value => setForm('password', value)}
-              secureTextEntry
-            />
-            <Gap height={24} />
-            <Button text="Continue" color="#FFC700" onPress={onSubmit} />
+          </TouchableOpacity>
+          <TextInputComponent
+            label="Full Name"
+            placeholder="Type your fullname"
+            value={form.name}
+            onChangeText={value => setForm('name', value)}
+          />
+          <Gap height={16} />
+          <TextInputComponent
+            label="Email Address"
+            placeholder="Type your email address"
+            value={form.email}
+            onChangeText={value => setForm('email', value)}
+          />
+          <Gap height={16} />
+          <TextInputComponent
+            label="Password"
+            placeholder="Type your password"
+            value={form.password}
+            onChangeText={value => setForm('password', value)}
+            secureTextEntry
+          />
+          <Gap height={24} />
+          <Button text="Continue" color="#FFC700" onPress={onSubmit} />
         </View>
       </ScrollView>
     </View>
@@ -92,7 +132,8 @@ const styles = StyleSheet.create({
         height: 90,
         borderRadius: 90,
         backgroundColor: '#F0F0F0',
-        padding: 24
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     addPhoto: {
         fontSize: 14,
