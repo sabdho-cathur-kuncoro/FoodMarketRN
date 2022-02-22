@@ -1,31 +1,62 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Button, Gap, Header, TextInputComponent } from '../../components'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from '../../utils'
 
 const SignUp = ({navigation}) => {
-    const globalState = useSelector((state) => state.globalReducer);
+    const [form, setForm] = useForm({
+        name: '',
+        email: '',
+        password: '',
+    });
+
+    const dispatch = useDispatch();
+
+    const onSubmit = ()=> {
+        console.log('Form: ', form);
+        dispatch({type: 'SET_REGISTER', value: form});
+        navigation.navigate('SignUpAddress');
+    }
   return (
     <View style={styles.page}>
-      <Header onBack={()=> {}} title="Sign Up" subTitle="Register and eat" />
-      <View style={styles.container}>
-          <View style={styles.photo}>              
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{flexGrow: 1}}>
+        <Header onBack={() => {}} title="Sign Up" subTitle="Register and eat" />
+        <View style={styles.container}>
+          <View style={styles.photo}>
             <View style={styles.borderPhoto}>
-                <View style={styles.photoContainer}>
-                    <Text style={styles.addPhoto}>Add Photo</Text>
-                </View>
+              <View style={styles.photoContainer}>
+                <Text style={styles.addPhoto}>Add Photo</Text>
+              </View>
             </View>
           </View>
-          <TextInputComponent label='Full Name' placeholder='Type your fullname' />
-          <Gap height={16} />
-          <TextInputComponent label='Email Address' placeholder='Type your email address' />
-          <Gap height={16} />
-          <TextInputComponent label='Password' placeholder='Type your password' />
-          <Gap height={24} />
-          <Button text='Continue' color='#FFC700' onPress={()=> navigation.navigate("SignUpAddress")} />
-      </View>
+            <TextInputComponent
+              label="Full Name"
+              placeholder="Type your fullname"
+              value={form.name}
+              onChangeText={value => setForm('name', value)}
+            />
+            <Gap height={16} />
+            <TextInputComponent
+              label="Email Address"
+              placeholder="Type your email address"
+              value={form.email}
+              onChangeText={value => setForm('email', value)}
+            />
+            <Gap height={16} />
+            <TextInputComponent
+              label="Password"
+              placeholder="Type your password"
+              value={form.password}
+              onChangeText={value => setForm('password', value)}
+              secureTextEntry
+            />
+            <Gap height={24} />
+            <Button text="Continue" color="#FFC700" onPress={onSubmit} />
+        </View>
+      </ScrollView>
     </View>
-  )
+  );
 }
 
 export default SignUp
