@@ -57,7 +57,7 @@ const SignUp = ({navigation}) => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{flexGrow: 1}}>
-        <Header onBack={() => {}} title="Sign Up" subTitle="Register and eat" />
+        <Header onBack={() => navigation.goBack()} title="Sign Up" subTitle="Register and eat" />
         <View style={styles.container}>
           <TouchableOpacity activeOpacity={0.7} onPress={addPhoto}>
             <View style={styles.photo}>

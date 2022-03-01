@@ -1,9 +1,8 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Button, Gap, Header, Select, TextInputComponent } from '../../components'
-import {useForm, showMessage} from '../../utils';
+import {useForm} from '../../utils';
 import {useDispatch, useSelector} from 'react-redux';
-// import Axios from 'axios'
 import { setLoading, signUpAction  } from '../../redux/action';
 
 const SignUpAddress = ({navigation}) => {
@@ -30,7 +29,7 @@ const SignUpAddress = ({navigation}) => {
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.page}>
         <Header
-          onBack={() => {}}
+          onBack={() => navigation.goBack()}
           title="Address"
           subTitle="Make sure it's valid"
         />
@@ -39,34 +38,30 @@ const SignUpAddress = ({navigation}) => {
             label="Phone No."
             placeholder="Type your phone number"
             value={form.phoneNumber}
-            onChangeText={(value) => setForm('phoneNumber', value)}
+            onChangeText={value => setForm('phoneNumber', value)}
           />
           <Gap height={16} />
           <TextInputComponent
             label="Address"
             placeholder="Type your address"
             value={form.address}
-            onChangeText={(value) => setForm('address', value)}
+            onChangeText={value => setForm('address', value)}
           />
           <Gap height={16} />
           <TextInputComponent
             label="House No."
             placeholder="Type your house number"
             value={form.houseNumber}
-            onChangeText={(value) => setForm('houseNumber', value)}
+            onChangeText={value => setForm('houseNumber', value)}
           />
           <Gap height={16} />
           <Select
             label="City"
             value={form.city}
-            onSelectChange={(value) => setForm('city', value)}
+            onSelectChange={value => setForm('city', value)}
           />
           <Gap height={24} />
-          <Button
-            text="Continue"
-            color="#FFC700"
-            onPress={onSubmit}
-          />
+          <Button text="Continue" color="#FFC700" onPress={onSubmit} />
         </View>
       </View>
     </ScrollView>
