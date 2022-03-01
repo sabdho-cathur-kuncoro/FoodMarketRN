@@ -2,9 +2,17 @@ import {StyleSheet, Text, View, useWindowDimensions, ScrollView} from 'react-nat
 import React, { useState } from 'react'
 import {TabBar, TabView, SceneMap} from 'react-native-tab-view';
 import ItemListMenu from '../ItemListMenu';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const Account = () => {
-
+  const navigation = useNavigation();
+  const signOut = ()=> {
+    AsyncStorage.multiRemove(['userProfile', 'token'])
+    .then(()=> {
+      navigation.reset({index: 0, routes: [{name: 'SignIn'}]});
+    })
+  }
   return (
     <ScrollView
       style={{
@@ -17,6 +25,7 @@ const Account = () => {
       <ItemListMenu text="Home Address" />
       <ItemListMenu text="Security" />
       <ItemListMenu text="Payments" />
+      <ItemListMenu text="Sign Out" onPress={signOut} />
     </ScrollView>
   );
 };
