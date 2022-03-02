@@ -1,10 +1,7 @@
 import Axios from "axios";
 import { setLoading } from "./global";
 import { showMessage, storeData } from "../../utils";
-
-const API_HOST = {
-  url: 'http://foodmarket-backend.buildwithangga.id/api'
-};
+import { API_HOST } from '../../config';
 
 export const signUpAction = (dataRegister, photoReducer, navigation) => (dispatch) => {
   Axios.post(`${API_HOST.url}/register`, dataRegister)
