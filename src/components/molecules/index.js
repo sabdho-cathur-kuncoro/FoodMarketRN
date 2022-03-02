@@ -12,6 +12,7 @@ import OrderTabSections from './OrderTabSections';
 import ProfileTabSections from './ProfileTabSections';
 import ItemListMenu from './ItemListMenu';
 import Loading from './Loading';
+import Number from './Number';
 
 export {
   Header,
@@ -27,5 +28,6 @@ export {
   OrderTabSections,
   ProfileTabSections,
   ItemListMenu,
-  Loading
+  Loading,
+  Number
 };
