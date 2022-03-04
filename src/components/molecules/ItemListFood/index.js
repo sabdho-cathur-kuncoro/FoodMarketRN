@@ -1,7 +1,6 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react'
 import Rating from '../Rating';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Number } from '..';
 
 const ItemListFood = ({image, onPress, items, rating, price, type, name, date, status }) => {
@@ -13,8 +12,7 @@ const ItemListFood = ({image, onPress, items, rating, price, type, name, date, s
           <>
             <View style={styles.content}>
               <Text style={styles.title}>{name}</Text>
-              <Number number={price} />
-              {/* <Text style={styles.price}>IDR {price}</Text> */}
+              <Number number={price} style={styles.price} />
             </View>
             <Rating number={rating} />
           </>
@@ -25,7 +23,7 @@ const ItemListFood = ({image, onPress, items, rating, price, type, name, date, s
           <>
             <View style={styles.content}>
               <Text style={styles.title}>{name}</Text>
-              <Text style={styles.price}>IDR {price}</Text>
+              <Number number={price} style={styles.price} />
             </View>
             <Text style={styles.items}>{items} items</Text>
           </>
@@ -36,7 +34,9 @@ const ItemListFood = ({image, onPress, items, rating, price, type, name, date, s
           <>
             <View style={styles.content}>
               <Text style={styles.title}>{name}</Text>
-              <Text style={styles.price}>{items} items. IDR {price}</Text>
+              <Text style={styles.price}>{items} items.{' '} 
+                <Number number={price} style={styles.price} />
+              </Text>
             </View>
           </>
         );

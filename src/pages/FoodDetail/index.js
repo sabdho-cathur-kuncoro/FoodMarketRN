@@ -1,14 +1,29 @@
-import { ImageBackground, SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { FoodDummy6, IcBackWhite } from '../../assets'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Button, Counter, Rating } from '../../components'
+import {
+  ImageBackground,
+  SafeAreaView,
+  TouchableOpacity,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import React, { useState } from 'react'
+import { IcBackWhite } from '../../assets'
+import { Button, Counter, Number, Rating } from '../../components'
 
-const FoodDetail = ({navigation}) => {
+const FoodDetail = ({navigation, route}) => {
+  const {name, picturePath, description, ingredients, rate, price} = route.params;
+  const [ totalItem, setTotalItem ] = useState(1);
+
+  const onCounterChange = (value) => {
+    setTotalItem(value);
+  }
   return (
     <SafeAreaView style={styles.page}>
-      <ImageBackground source={FoodDummy6} style={styles.cover}>
-        <TouchableOpacity activeOpacity={0.7} style={styles.back}>
+      <ImageBackground source={{uri: picturePath}} style={styles.cover}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.back}
+          onPress={() => navigation.goBack()}>
           <IcBackWhite />
         </TouchableOpacity>
       </ImageBackground>
@@ -16,26 +31,25 @@ const FoodDetail = ({navigation}) => {
         <View style={styles.mainContent}>
           <View style={styles.productContainer}>
             <View>
-              <Text style={styles.title}>Cherry Healthy</Text>
-              <Rating />
+              <Text style={styles.title}>{name}</Text>
+              <Rating number={rate} />
             </View>
-            <Counter />
+            <Counter onValueChange={onCounterChange} />
           </View>
-          <Text style={styles.desc}>
-            Makanan khas Bandung yang cukup sering dipesan oleh anak muda dengan
-            pola makan yang cukup tinggi dengan mengutamakan diet yang sehat dan
-            teratur.
-          </Text>
+          <Text style={styles.desc}>{description}</Text>
           <Text style={styles.label}>Ingredients:</Text>
-          <Text style={styles.desc}>Seledri, telur, blueberry, madu.</Text>
+          <Text style={styles.desc}>{ingredients}</Text>
         </View>
         <View style={styles.footer}>
           <View style={styles.priceContainer}>
             <Text style={styles.labelTotal}>Total Price:</Text>
-            <Text style={styles.priceTotal}>IDR 12.289.000</Text>
+            <Number style={styles.priceTotal} number={totalItem * price} />
           </View>
           <View style={styles.button}>
-            <Button text="Order Now" onPress={()=> navigation.navigate("OrderSummary")} />
+            <Button
+              text="Order Now"
+              onPress={() => navigation.navigate('OrderSummary')}
+            />
           </View>
         </View>
       </View>

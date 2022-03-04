@@ -1,7 +1,6 @@
 import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import React, { useEffect, useState } from 'react'
 import {TabBar, TabView, SceneMap} from 'react-native-tab-view';
-import { FoodDummy1, FoodDummy2, FoodDummy3, FoodDummy4 } from '../../../assets';
 import ItemListFood from '../ItemListFood';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,7 +27,7 @@ const newTaste = () => {
             <ItemListFood
               key={item.id}
               image={{uri: item.picturePath}}
-              onPress={() => navigation.navigate('FoodDetail')}
+              onPress={() => navigation.navigate('FoodDetail', item)}
               type="product"
               rating={item.rate}
               price={item.price}
@@ -61,7 +60,7 @@ const Popular = () => {
           <ItemListFood
             key={item.id}
             image={{uri: item.picturePath}}
-            onPress={() => navigation.navigate('FoodDetail')}
+            onPress={() => navigation.navigate('FoodDetail', item)}
             type="product"
             rating={item.rate}
             price={item.price}
@@ -94,7 +93,7 @@ const Recommended = () => {
           <ItemListFood
             key={item.id}
             image={{uri: item.picturePath}}
-            onPress={() => navigation.navigate('FoodDetail')}
+            onPress={() => navigation.navigate('FoodDetail', item)}
             type="product"
             rating={item.rate}
             price={item.price}

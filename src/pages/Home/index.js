@@ -4,7 +4,7 @@ import {FoodCard, Gap, HomeProfile, HomeTabSections} from '../../components';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFoodData } from '../../redux/action/home';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const {food} = useSelector(state => state.homeReducer);
 
@@ -23,8 +23,14 @@ const Home = () => {
                 <Gap width={24} />
                 {food.map(itemFood => {
                   return (
-                    <FoodCard key={itemFood.id} name={itemFood.name} image={{uri: itemFood.picturePath}} rating={itemFood.rate} />
-                  )
+                    <FoodCard
+                      key={itemFood.id}
+                      name={itemFood.name}
+                      image={{uri: itemFood.picturePath}}
+                      rating={itemFood.rate}
+                      onPress={() => navigation.navigate('FoodDetail', itemFood)}
+                    />
+                  );
                 })}
               </View>
             </ScrollView>
