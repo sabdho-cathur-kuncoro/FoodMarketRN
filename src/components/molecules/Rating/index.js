@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { IcStarOff, IcStarOn } from '../../../assets';
-import { Number } from '..';
+import Number from '../Number';
 
 const Rating = ({number}) => {
   const renderStar = () => {

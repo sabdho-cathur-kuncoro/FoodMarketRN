@@ -6,16 +6,50 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { IcBackWhite } from '../../assets'
 import { Button, Counter, Number, Rating } from '../../components'
+import {getData} from '../../utils'
 
 const FoodDetail = ({navigation, route}) => {
-  const {name, picturePath, description, ingredients, rate, price} = route.params;
+  const {id, name, picturePath, description, ingredients, rate, price} = route.params;
   const [ totalItem, setTotalItem ] = useState(1);
+  const [userProfile, setUserProfile] = useState({});
 
   const onCounterChange = (value) => {
     setTotalItem(value);
+  }
+
+  useEffect(()=> {
+    getData('userProfile').then((res)=> {
+      setUserProfile(res);
+    })
+  }, [])
+
+  const onOrder = () => {
+    const totalPrice = totalItem * price;
+    const driver = 50000;
+    const tax = 10/100 * totalPrice;
+    const total = totalPrice + tax + driver;
+
+    const data = {
+      item: {
+        id,
+        name,
+        price,
+        picturePath
+      },
+      transaction: {
+        totalItem,
+        totalPrice,
+        driver,
+        tax,
+        total
+      },
+      userProfile
+    }
+
+    navigation.navigate('OrderSummary', data);
   }
   return (
     <SafeAreaView style={styles.page}>
@@ -48,7 +82,7 @@ const FoodDetail = ({navigation, route}) => {
           <View style={styles.button}>
             <Button
               text="Order Now"
-              onPress={() => navigation.navigate('OrderSummary')}
+              onPress={onOrder}
             />
           </View>
         </View>

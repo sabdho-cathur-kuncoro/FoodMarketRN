@@ -1,37 +1,121 @@
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { Button, Header, ItemListFood, ItemValue } from '../../components'
-import { FoodDummy1 } from '../../assets'
+import React, { useEffect, useState } from 'react'
+import { Button, Header, ItemListFood, ItemValue, Loading } from '../../components'
+import Axios from 'axios';
+import { getData } from '../../utils';
+import { API_HOST } from '../../config';
+import {WebView} from 'react-native-webview';
 
-const OrderSummary = ({navigation}) => {
+const OrderSummary = ({navigation, route}) => {
+  const {item, transaction, userProfile} = route.params;
+  const [token, setToken] = useState('');
+  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+  const [paymentURL, setPaymentURL] = useState('http://google.com');
+
+  useEffect(()=> {
+    getData('token').then((res)=> {
+      setToken(res.value);
+    })
+  },[])
+  
+  const onCheckout = () => {
+    const data = {
+      food_id: item.id,
+      user_id: userProfile.id,
+      quantity: transaction.totalItem,
+      total: transaction.total,
+      status: 'PENDING'
+    }
+    Axios.post(`${API_HOST.url}/checkout`, data, {
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then(res => {
+        // console.log('checkout success: ', res);
+        setIsPaymentOpen(true);
+        setPaymentURL(res.data.data.payment_url);
+      })
+      .catch(err => {
+        console.log('error checkout: ', err);
+      });
+  }
+
+  const onNavChange = (state) => {
+    const titleWeb = 'Laravel';
+    if(state.title === titleWeb) {
+      navigation.replace('SuccessOrder');
+    }
+  }
+
+  if(isPaymentOpen) {
+    return (
+      <>
+        <Header
+          title="Payment"
+          subTitle="You deserve better meal"
+          onBack={() => setIsPaymentOpen(false)}
+        />
+        <WebView 
+          source={{uri: paymentURL}} 
+          startInLoadingState={true}
+          renderLoading={()=> <Loading />}
+          onNavigationStateChange={onNavChange} 
+        />
+      </>
+    );
+  }
+
   return (
     <SafeAreaView>
       <StatusBar translucent={true} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <Header
-          title="Payment"
+          title="Order Summary"
           subTitle="You deserve better meal"
-          onBack={() => {}}
+          onBack={() => navigation.goBack()}
         />
         <View style={styles.content}>
           <Text style={styles.label}>Item Ordered</Text>
-          <ItemListFood image={FoodDummy1} type="order-summary" name="Soup Bumil" price="200.000" items={14} />
+          <ItemListFood
+            image={{uri: item.picturePath}}
+            type="order-summary"
+            name={item.name}
+            price={item.price}
+            items={transaction.totalItem}
+          />
           <Text style={styles.label}>Details Transaction</Text>
-          <ItemValue label="Cherry Healthy" value="IDR 18.390.000" />
-          <ItemValue label="Driver" value="IDR 50.000" />
-          <ItemValue label="Tax 10%" value="IDR 1.839.000" />
-          <ItemValue label="Total Price" valueColor='#1ABC9C' value="IDR 390.803.000" />
+          <ItemValue
+            label={item.name}
+            value={transaction.totalPrice}
+            type="currency"
+          />
+          <ItemValue
+            label="Driver"
+            value={transaction.driver}
+            type="currency"
+          />
+          <ItemValue label="Tax 10%" value={transaction.tax} type="currency" />
+          <ItemValue
+            label="Total Price"
+            valueColor="#1ABC9C"
+            value={transaction.total}
+            type="currency"
+          />
         </View>
         <View style={styles.content}>
           <Text style={styles.label}>Deliver to:</Text>
-          <ItemValue label="Name" value="Sabdho C Kuncoro" />
-          <ItemValue label="Phone No." value="0896 5346 3568" />
-          <ItemValue label="Address" value="Setra Duta Palima" />
-          <ItemValue label="House No." value="A5 Hook" />
-          <ItemValue label="City" value="Bandung" />
+          <ItemValue label="Name" value={userProfile.name} />
+          <ItemValue label="Phone No." value={userProfile.phoneNumber} />
+          <ItemValue label="Address" value={userProfile.address} />
+          <ItemValue label="House No." value={userProfile.houseNumber} />
+          <ItemValue label="City" value={userProfile.city} />
         </View>
         <View style={styles.button}>
-          <Button text="Checkout Now" onPress={()=> navigation.replace("SuccessOrder")} />
+          <Button
+            text="Checkout Now"
+            onPress={onCheckout}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

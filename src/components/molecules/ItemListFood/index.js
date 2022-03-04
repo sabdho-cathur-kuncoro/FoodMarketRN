@@ -1,7 +1,7 @@
 import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import React from 'react'
 import Rating from '../Rating';
-import { Number } from '..';
+import Number from '../Number';
 
 const ItemListFood = ({image, onPress, items, rating, price, type, name, date, status }) => {
   const renderContent = ()=> {
