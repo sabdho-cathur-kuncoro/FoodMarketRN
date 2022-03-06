@@ -34,25 +34,28 @@ const ItemListFood = ({image, onPress, items, rating, price, type, name, date, s
           <>
             <View style={styles.content}>
               <Text style={styles.title}>{name}</Text>
-              <Text style={styles.price}>{items} items.{' '} 
+              <View style={styles.row}>
+                <Text style={styles.price}>{items} items. </Text>
                 <Number number={price} style={styles.price} />
-              </Text>
+              </View>
             </View>
           </>
         );
       case 'past-orders':
         // past order
+        const formatedDate = new Date(date).toDateString();
         return (
           <>
             <View style={styles.content}>
               <Text style={styles.title}>{name}</Text>
-              <Text style={styles.price}>
-                {items} items. IDR {price}
-              </Text>
+              <View style={styles.row}>
+                <Text style={styles.price}>{items} items. </Text>
+                <Number number={price} style={styles.price} />
+              </View>
             </View>
             <View>
-              <Text style={styles.date}>{date}</Text>
-              <Text style={styles.status}>{status}</Text>
+              <Text style={styles.date}>{formatedDate}</Text>
+              <Text style={styles.status(status)}>{status}</Text>
             </View>
           </>
         );
@@ -115,9 +118,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     color: '#8D92A3'
   },
-  status: {
+  status: (status)=> ({
     fontSize: 10,
     fontFamily: 'Poppins-Regular',
-    color: '#D9435E'
+    color: status === 'CANCELLED' ? '#D9435E' : '#1ABC9C'
+  }),
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 });
