@@ -75,7 +75,6 @@ export const getPastOrders = () => (dispatch) => {
         ])
           .then(
             Axios.spread((resCancel, resDeliver) => {
-              // console.log('In progress: ', res.data);
               const cancel = resCancel.data.data.data;
               const deliver = resDeliver.data.data.data;
               dispatch({type: 'SET_PAST_ORDER', value: [...cancel, ...deliver]});
